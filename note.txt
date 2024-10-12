@@ -1,4 +1,4 @@
-== step set up project ts
+// setup project ts
 npm init -y
 npm i -D typescript ts-node
 npx tsc --init
@@ -6,3 +6,7 @@ setting config ts di tsconfig.json
 npm i nodemon
 npm i express
 npm i -D @types/express
+
+// setup eslint
+npx eslint --init
+npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslint-config-standard eslint-plugin-import eslint-plugin-node eslint-plugin-promise eslint-plugin-standard
