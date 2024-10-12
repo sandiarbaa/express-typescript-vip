@@ -1,0 +1,8 @@
+== step set up project ts
+npm init -y
+npm i -D typescript ts-node
+npx tsc --init
+setting config ts di tsconfig.json
+npm i nodemon
+npm i express
+npm i -D @types/express
