@@ -16,13 +16,13 @@ export default defineConfig([
       typescriptEslint: typescriptEslintPlugin
     },
     rules: {
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-require-imports': 'error'
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }], // Mengabaikan variabel yang diawali dengan _
+      '@typescript-eslint/no-require-imports': 'error',
+      '@typescript-eslint/explicit-function-return-type': 'warn', // Menyarankan untuk mendefinisikan tipe return pada fungsi
+      'no-unused-vars': 'off' // Mematikan aturan ini karena sudah diatur dengan @typescript-eslint
     }
   },
-  // Jika Anda ingin menambahkan konfigurasi lain, lakukan di sini
   {
-    // Contoh tambahan konfigurasi
     files: ['*.ts', '*.tsx'],
     rules: {
       // Tambahkan aturan tambahan jika diperlukan
