@@ -1,7 +1,13 @@
 import { Request, Response } from 'express'
 import { createProductValidation, updateProductValidation } from '../validations/product.validation'
 import { logger } from '../utils/logger'
-import { addProductToDB, getProductByIdFromDB, getProductFromDB, updateProductById } from '../services/product.service'
+import {
+  addProductToDB,
+  deleteProductById,
+  getProductByIdFromDB,
+  getProductFromDB,
+  updateProductById
+} from '../services/product.service'
 import { ProductType } from '../types/allType'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -86,7 +92,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
   const { error, value } = updateProductValidation(req.body)
 
   if (error) {
-    logger.error('ERR: product - create = ', error?.details[0].message)
+    logger.error('ERR: product - update = ', error?.details[0].message)
     res.status(422).send({
       status: false,
       statusCode: 422,
@@ -97,13 +103,64 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
 
   try {
     // console.log(value);
-    await updateProductById(id, value)
-    logger.info('Success update product')
-    res.status(200).send({
-      status: true,
-      statusCode: 200,
-      message: 'Update product success'
+    const result = await updateProductById(id, value)
+    if (result) {
+      logger.info('Success update product')
+      res.status(200).send({
+        status: true,
+        statusCode: 200,
+        message: 'Update product success'
+      })
+      return
+    } else {
+      logger.info('Data not found')
+      res.status(404).send({
+        status: true,
+        statusCode: 404,
+        message: 'Data not found'
+      })
+      return
+    }
+  } catch (error) {
+    logger.error('ERR: product - update = ', error)
+    res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error
     })
     return
-  } catch (error) {}
+  }
+}
+
+export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+
+  try {
+    const result = await deleteProductById(id)
+    if (result) {
+      logger.info('Success delete product')
+      res.status(200).send({
+        status: true,
+        statusCode: 200,
+        message: 'Delete product success'
+      })
+      return
+    } else {
+      logger.info('Data not found')
+      res.status(404).send({
+        status: true,
+        statusCode: 404,
+        message: 'Data not found'
+      })
+      return
+    }
+  } catch (error) {
+    logger.error('ERR: product - delete = ', error)
+    res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error
+    })
+    return
+  }
 }

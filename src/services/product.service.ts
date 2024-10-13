@@ -22,5 +22,11 @@ export const getProductByIdFromDB = async (id: String): Promise<ProductType | nu
 }
 
 export const updateProductById = async (id: String, payload: ProductType): Promise<ProductType | null> => {
-  return await productModel.findOneAndUpdate({ product_id: id }, { $set: payload })
+  const result = await productModel.findOneAndUpdate({ product_id: id }, { $set: payload })
+  return result
+}
+
+export const deleteProductById = async (id: String): Promise<ProductType | null> => {
+  const result = await productModel.findOneAndDelete({ product_id: id })
+  return result
 }
