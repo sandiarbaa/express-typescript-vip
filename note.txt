@@ -14,3 +14,8 @@ npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint eslin
 // setup pre-commit husky
 npm i -D husky pretty-quick --legacy-peer-deps
 npm install eslint-plugin-promise@6.6.0 --save-dev
+
+// install pino
+npm i pino pino-pretty moment
+npm i body-parser cors
+npm i --save-dev @types/cors
