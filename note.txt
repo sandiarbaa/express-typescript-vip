@@ -19,3 +19,6 @@ npm install eslint-plugin-promise@6.6.0 --save-dev
 npm i pino pino-pretty moment
 npm i body-parser cors
 npm i --save-dev @types/cors
+
+// install joi
+npm i joi

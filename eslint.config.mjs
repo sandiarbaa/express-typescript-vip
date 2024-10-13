@@ -1,6 +1,7 @@
 import { defineConfig } from 'eslint-define-config'
 import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin'
 import typescriptEslintParser from '@typescript-eslint/parser'
+import { expression } from 'joi'
 
 export default defineConfig([
   {
@@ -26,6 +27,9 @@ export default defineConfig([
     files: ['*.ts', '*.tsx'],
     rules: {
       // Tambahkan aturan tambahan jika diperlukan
+      // '@typescript-eslint/restrict-template-expression': 'off',
+      // '@typescript-eslint/explicit-function-return-type': 'off',
+      // '@typescript-eslint/restrict-boolean-expression': 'off'
     }
   }
 ])
