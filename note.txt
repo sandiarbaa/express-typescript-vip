@@ -26,3 +26,7 @@ npm i joi
 // install mongoose
 npm i mongoose
 npm i dotenv
+
+//install uuid
+npm i uuid
+npm i --save-dev @types/uuid

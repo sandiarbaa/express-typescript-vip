@@ -5,5 +5,5 @@ export const ProductRouter: Router = Router()
 
 // http://localhost:4000/health
 ProductRouter.get('/', getProduct)
-ProductRouter.get('/:name', getProduct)
+ProductRouter.get('/:id', getProduct)
 ProductRouter.post('/', createProduct)
