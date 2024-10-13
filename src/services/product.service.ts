@@ -20,3 +20,7 @@ export const getProductFromDB = async (): Promise<ProductType[]> => {
 export const getProductByIdFromDB = async (id: String): Promise<ProductType | null> => {
   return await productModel.findOne({ product_id: id })
 }
+
+export const updateProductById = async (id: String, payload: ProductType): Promise<ProductType | null> => {
+  return await productModel.findOneAndUpdate({ product_id: id }, { $set: payload })
+}

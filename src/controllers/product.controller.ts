@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
-import { createProductValidation } from '../validations/product.validation'
+import { createProductValidation, updateProductValidation } from '../validations/product.validation'
 import { logger } from '../utils/logger'
-import { addProductToDB, getProductByIdFromDB, getProductFromDB } from '../services/product.service'
+import { addProductToDB, getProductByIdFromDB, getProductFromDB, updateProductById } from '../services/product.service'
 import { ProductType } from '../types/allType'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -14,8 +14,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
     res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error?.details[0].message,
-      data: {}
+      message: error?.details[0].message
     })
     return
   }
@@ -34,8 +33,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
     res.status(422).send({
       status: false,
       statusCode: 422,
-      message: error,
-      data: {}
+      message: error
     })
   }
 }
@@ -58,8 +56,7 @@ export const getProduct = async (req: Request, res: Response): Promise<void> => 
         res.status(404).send({
           status: false,
           statusCode: 404,
-          message: 'Data not found',
-          data: {}
+          message: 'Data not found'
         })
         return
       }
@@ -78,8 +75,35 @@ export const getProduct = async (req: Request, res: Response): Promise<void> => 
     res.status(500).send({
       status: false,
       statusCode: 500,
-      message: 'Internal Server Error',
-      data: {}
+      message: 'Internal Server Error'
     })
   }
+}
+
+export const updateProduct = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params
+
+  const { error, value } = updateProductValidation(req.body)
+
+  if (error) {
+    logger.error('ERR: product - create = ', error?.details[0].message)
+    res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error?.details[0].message
+    })
+    return
+  }
+
+  try {
+    // console.log(value);
+    await updateProductById(id, value)
+    logger.info('Success update product')
+    res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Update product success'
+    })
+    return
+  } catch (error) {}
 }
