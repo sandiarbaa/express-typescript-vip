@@ -3,7 +3,7 @@ import { createProduct, deleteProduct, getProduct, updateProduct } from '../cont
 
 export const ProductRouter: Router = Router()
 
-// http://localhost:4000/health
+// http://localhost:4000/product
 ProductRouter.get('/', getProduct)
 ProductRouter.get('/:id', getProduct)
 ProductRouter.post('/', createProduct)
