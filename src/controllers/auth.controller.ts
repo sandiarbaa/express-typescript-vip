@@ -1,11 +1,11 @@
 import { Request, Response } from 'express'
-import { createSessionValidation, createUserValidation } from '../validations/auth.validation'
+import { createSessionValidation, createUserValidation, refreshSessionValidation } from '../validations/auth.validation'
 import { v4 as uuidv4 } from 'uuid'
 import { logger } from '../utils/logger'
 import { checkPassword, hashing } from '../utils/hashing'
 import { UserType } from '../types/allType'
 import { createUser, findUserByEmail } from '../services/auth.service'
-import { signJWT } from '../utils/jwt'
+import { signJWT, verifyJWT } from '../utils/jwt'
 
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   req.body.user_id = uuidv4()
@@ -71,17 +71,68 @@ export const createSession = async (req: Request, res: Response): Promise<void> 
       return
     }
 
-    const accessToken = signJWT(user)
+    const accessToken = signJWT(user, '30s')
+    const refreshToken = signJWT(user, '1d')
+
     logger.info('Login success')
     res.status(200).send({
       status: true,
       statusCode: 200,
       message: 'Login success',
-      data: { accessToken }
+      data: { accessToken, refreshToken }
     })
     return
   } catch (error: any) {
     logger.error('ERR: auth - create session = ', error.message)
+    res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error.message
+    })
+    return
+  }
+}
+
+export const refreshSession = async (req: Request, res: Response): Promise<void> => {
+  const { error, value } = refreshSessionValidation(req.body)
+
+  if (error) {
+    logger.error('ERR: auth - refresh session = ', error?.details[0].message)
+    res.status(422).send({
+      status: false,
+      statusCode: 422,
+      message: error?.details[0].message
+    })
+    return
+  }
+
+  try {
+    // Verifikasi refresh token
+    const { valid, expired, decoded } = verifyJWT(value.refreshToken)
+
+    if (!valid) {
+      throw new Error(expired ? 'Refresh token expired' : 'Invalid refresh token')
+    }
+
+    // Cari user berdasarkan email dari decoded token
+    const user = await findUserByEmail(decoded.email)
+    if (!user) {
+      throw new Error('Invalid email or password')
+    }
+
+    // Buat accessToken baru
+    const accessToken = signJWT(user, '1d')
+
+    logger.info('Refresh session success')
+    res.status(200).send({
+      status: true,
+      statusCode: 200,
+      message: 'Refresh session success',
+      data: { accessToken }
+    })
+    return
+  } catch (error: any) {
+    logger.error('ERR: auth - refresh session = ', error.message)
     res.status(422).send({
       status: false,
       statusCode: 422,
