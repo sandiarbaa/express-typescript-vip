@@ -20,6 +20,8 @@ mongoose
     process.exit(1)
   })
 
+  import deserializeToken from './middleware/deserializedToken'
+
 const app: Application = express()
 const port: number = 4000
 
@@ -35,6 +37,9 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', '*')
   next()
 })
+
+// untuk setiap req akan di cek tokennya, kalau ada akan di set usernya
+app.use(deserializeToken)
 
 routes(app)
 

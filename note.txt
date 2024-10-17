@@ -34,3 +34,7 @@ npm i --save-dev @types/uuid
 // install bcrypt
 npm i bcrypt
 npm i -D @types/bcrypt
+
+// install json web token
+npm i jsonwebtoken
+npm i -D @types/jsonwebtoken
